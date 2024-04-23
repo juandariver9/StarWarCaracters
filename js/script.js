@@ -67,25 +67,28 @@ function DisplayFilmsInfo(data) {
     if (data.response === "error") {
         filmInfo.innerHTML = `<p>Error: ${data.error}</p>`;
     } else {
-        let filmsList = data.films.map(url => {
+        let filmsList = data.films.map(function(url) {
             return fetch(url)
-                .then(response => response.json())
-                .then(filmData => filmData.title);
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(filmData) {
+                    return filmData.title;
+                });
         });
 
         Promise.all(filmsList)
-            .then(films => {
-                let filmsHtml = films.map(film => `<p>${film}</p>`).join('');
-                filmInfo.innerHTML = `
-                    <p><b>Películas:</b></p>
-                    ${filmsHtml}
-                `;
+            .then(function(films) {
+                let filmsHtml = "";
+                for (let i = 0; i < films.length; i++) {
+                    filmsHtml += `<p> ${films[i]} </p>`;
+                }
+                filmInfo.innerHTML = `<p><b>Películas:</b></p>${filmsHtml}`;
             })
-            .catch(error => {
-                filmInfo.innerHTML = `<p>Error fetching film data: ${error}</p>`;
-            });
+
     }
 }
+
 
 
 
